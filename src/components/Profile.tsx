@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, Trophy, Star, Zap, Package, Eye, EyeOff, Settings, Award, Target, TrendingUp, MapPin, Share2 } from 'lucide-react';
+import { TrendingUp, Package, Eye, EyeOff, Settings, Award, Target, Star, Zap, MapPin, Share2 } from 'lucide-react';
 import { components, getComponentById, getRarityColor } from '../data/database';
 
 interface ProfileProps {
@@ -10,6 +10,11 @@ interface ProfileProps {
   projectsBuilt: number;
   tradesCompleted: number;
 }
+
+const GREEN = '#3d8b64';
+const GREEN_DARK = '#2d6b4f';
+const BLUE = '#7eb8d4';
+const RUST = '#b45a2c';
 
 export default function Profile({ inventory, xp, level, scansCompleted, projectsBuilt, tradesCompleted }: ProfileProps) {
   const [profileVisible, setProfileVisible] = useState(true);
@@ -25,7 +30,6 @@ export default function Profile({ inventory, xp, level, scansCompleted, projects
     return sum + (part?.estimatedValue || 0);
   }, 0);
 
-  // Rarity breakdown
   const rarityCounts = {
     common: inventory.filter(id => getComponentById(id)?.rarity === 'common').length,
     uncommon: inventory.filter(id => getComponentById(id)?.rarity === 'uncommon').length,
@@ -34,7 +38,6 @@ export default function Profile({ inventory, xp, level, scansCompleted, projects
     legendary: inventory.filter(id => getComponentById(id)?.rarity === 'legendary').length,
   };
 
-  // Badges
   const badges = [
     { id: 'first_scan', name: 'First Scan', icon: '🔍', description: 'Complete your first device scan', earned: scansCompleted >= 1 },
     { id: 'scavenger', name: 'Scavenger', icon: '🗑️', description: 'Scan 10 different devices', earned: scansCompleted >= 10 },
@@ -55,21 +58,21 @@ export default function Profile({ inventory, xp, level, scansCompleted, projects
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="p-4 bg-gradient-to-r from-indigo-900/50 to-violet-900/50 border-b border-indigo-500/20">
+      <div className="steel-panel p-4" style={{ borderBottom: `1px solid rgba(61, 139, 100, 0.2)` }}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-indigo-400 flex items-center gap-2">
-            <User className="w-5 h-5" />
+          <h2 className="text-xl font-bold flex items-center gap-2" style={{ color: GREEN }}>
+            <TrendingUp className="w-5 h-5" />
             Profile
           </h2>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setProfileVisible(!profileVisible)}
-              className="p-2 rounded-lg bg-black/20 text-gray-400 hover:text-white transition-colors"
-              title={profileVisible ? 'Hide profile from others' : 'Show profile to others'}
+              className="p-2 rounded-lg transition-colors"
+              style={{ background: 'rgba(15, 17, 21, 0.5)', color: '#64748b' }}
             >
               {profileVisible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
             </button>
-            <button className="p-2 rounded-lg bg-black/20 text-gray-400 hover:text-white transition-colors">
+            <button className="p-2 rounded-lg transition-colors" style={{ background: 'rgba(15, 17, 21, 0.5)', color: '#64748b' }}>
               <Share2 className="w-4 h-4" />
             </button>
           </div>
@@ -77,45 +80,65 @@ export default function Profile({ inventory, xp, level, scansCompleted, projects
 
         {/* Profile card */}
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-3xl shadow-lg shadow-indigo-500/20">
-            🔧
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl relative overflow-hidden"
+            style={{
+              background: `linear-gradient(145deg, ${GREEN_DARK}, ${GREEN})`,
+              boxShadow: `0 4px 15px rgba(61, 139, 100, 0.2), inset 0 1px 1px rgba(255,255,255,0.1)`
+            }}>
+            {/* Brushed texture */}
+            <div className="absolute inset-0 opacity-15" style={{
+              backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.1) 1px, rgba(255,255,255,0.1) 2px)'
+            }}></div>
+            <span className="relative z-10">🔧</span>
+            {/* Rust corner */}
+            <div className="absolute bottom-0 right-0 w-6 h-6 opacity-40" style={{
+              background: `radial-gradient(circle at bottom right, ${RUST}, transparent 70%)`
+            }}></div>
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-white">TweakMaster</h3>
+            <h3 className="text-lg font-bold text-slate-100">TweakMaster</h3>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs bg-indigo-500/30 text-indigo-300 px-2 py-0.5 rounded-full font-bold">
+              <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: 'rgba(61, 139, 100, 0.2)', color: '#4ade80' }}>
                 Level {level}
               </span>
-              <span className="text-xs text-gray-500">{xp} XP</span>
+              <span className="text-xs text-slate-500">{xp} XP</span>
             </div>
           </div>
         </div>
 
         {/* XP Bar */}
         <div className="mt-3">
-          <div className="flex justify-between text-[10px] text-gray-400 mb-1">
+          <div className="flex justify-between text-[10px] text-slate-400 mb-1">
             <span>Level {level}</span>
             <span>{xpForNextLevel - (xp % xpForNextLevel)} XP to Level {level + 1}</span>
           </div>
-          <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+          <div className="h-2 rounded-full overflow-hidden" style={{ background: '#1e2228' }}>
             <div
-              className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all"
-              style={{ width: `${xpProgress}%` }}
+              className="h-full rounded-full transition-all"
+              style={{ width: `${xpProgress}%`, background: `linear-gradient(90deg, ${GREEN_DARK}, ${GREEN}, ${BLUE})` }}
             ></div>
           </div>
         </div>
 
         {/* Visibility status */}
         <div className={`mt-3 flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg w-fit ${
-          profileVisible ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-gray-800 text-gray-500 border border-gray-700/30'
-        }`}>
+          profileVisible ? '' : ''
+        }`} style={profileVisible ? {
+          background: 'rgba(61, 139, 100, 0.08)',
+          color: '#4ade80',
+          border: '1px solid rgba(61, 139, 100, 0.2)'
+        } : {
+          background: 'rgba(30, 34, 40, 0.5)',
+          color: '#64748b',
+          border: '1px solid rgba(100, 116, 139, 0.15)'
+        }}>
           {profileVisible ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
           {profileVisible ? 'Visible to nearby tinkerers' : 'Hidden from others'}
         </div>
       </div>
 
       {/* Section tabs */}
-      <div className="flex border-b border-gray-800">
+      <div className="flex" style={{ borderBottom: '1px solid rgba(100, 116, 139, 0.15)' }}>
         {[
           { id: 'stats', label: 'Stats', icon: TrendingUp },
           { id: 'badges', label: `Badges (${earnedBadges})`, icon: Award },
@@ -124,11 +147,13 @@ export default function Profile({ inventory, xp, level, scansCompleted, projects
           <button
             key={tab.id}
             onClick={() => setActiveSection(tab.id as any)}
-            className={`flex-1 py-3 text-xs font-medium flex items-center justify-center gap-1.5 transition-all ${
-              activeSection === tab.id
-                ? 'text-indigo-400 border-b-2 border-indigo-400'
-                : 'text-gray-500 hover:text-gray-300'
-            }`}
+            className="flex-1 py-3 text-xs font-medium flex items-center justify-center gap-1.5 transition-all"
+            style={activeSection === tab.id ? {
+              color: GREEN,
+              borderBottom: `2px solid ${GREEN}`
+            } : {
+              color: '#64748b'
+            }}
           >
             <tab.icon className="w-3.5 h-3.5" />
             {tab.label}
@@ -142,61 +167,65 @@ export default function Profile({ inventory, xp, level, scansCompleted, projects
           <div className="space-y-4">
             {/* Main stats */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-gray-800/30 border border-gray-700/20 rounded-xl p-4 text-center">
-                <Package className="w-6 h-6 text-blue-400 mx-auto mb-1" />
-                <p className="text-2xl font-bold text-white">{uniqueParts}</p>
-                <p className="text-[10px] text-gray-400 uppercase">Unique Parts</p>
+              <div className="rounded-xl p-4 text-center" style={{ background: 'rgba(30, 34, 40, 0.3)', border: '1px solid rgba(100, 116, 139, 0.12)' }}>
+                <Package className="w-6 h-6 mx-auto mb-1" style={{ color: BLUE }} />
+                <p className="text-2xl font-bold text-slate-100">{uniqueParts}</p>
+                <p className="text-[10px] text-slate-500 uppercase">Unique Parts</p>
               </div>
-              <div className="bg-gray-800/30 border border-gray-700/20 rounded-xl p-4 text-center">
-                <Zap className="w-6 h-6 text-yellow-400 mx-auto mb-1" />
-                <p className="text-2xl font-bold text-white">{scansCompleted}</p>
-                <p className="text-[10px] text-gray-400 uppercase">Scans Done</p>
+              <div className="rounded-xl p-4 text-center" style={{ background: 'rgba(30, 34, 40, 0.3)', border: '1px solid rgba(100, 116, 139, 0.12)' }}>
+                <Zap className="w-6 h-6 mx-auto mb-1" style={{ color: '#eab308' }} />
+                <p className="text-2xl font-bold text-slate-100">{scansCompleted}</p>
+                <p className="text-[10px] text-slate-500 uppercase">Scans Done</p>
               </div>
-              <div className="bg-gray-800/30 border border-gray-700/20 rounded-xl p-4 text-center">
-                <Target className="w-6 h-6 text-emerald-400 mx-auto mb-1" />
-                <p className="text-2xl font-bold text-white">{projectsBuilt}</p>
-                <p className="text-[10px] text-gray-400 uppercase">Projects Built</p>
+              <div className="rounded-xl p-4 text-center" style={{ background: 'rgba(30, 34, 40, 0.3)', border: '1px solid rgba(100, 116, 139, 0.12)' }}>
+                <Target className="w-6 h-6 mx-auto mb-1" style={{ color: GREEN }} />
+                <p className="text-2xl font-bold text-slate-100">{projectsBuilt}</p>
+                <p className="text-[10px] text-slate-500 uppercase">Projects Built</p>
               </div>
-              <div className="bg-gray-800/30 border border-gray-700/20 rounded-xl p-4 text-center">
-                <Star className="w-6 h-6 text-purple-400 mx-auto mb-1" />
-                <p className="text-2xl font-bold text-white">{tradesCompleted}</p>
-                <p className="text-[10px] text-gray-400 uppercase">Trades Done</p>
+              <div className="rounded-xl p-4 text-center" style={{ background: 'rgba(30, 34, 40, 0.3)', border: '1px solid rgba(100, 116, 139, 0.12)' }}>
+                <Star className="w-6 h-6 mx-auto mb-1" style={{ color: '#a78bfa' }} />
+                <p className="text-2xl font-bold text-slate-100">{tradesCompleted}</p>
+                <p className="text-[10px] text-slate-500 uppercase">Trades Done</p>
               </div>
             </div>
 
             {/* Collection value */}
-            <div className="bg-gradient-to-r from-emerald-900/30 to-cyan-900/30 border border-emerald-500/20 rounded-xl p-4">
+            <div className="rounded-xl p-4" style={{
+              background: `linear-gradient(135deg, rgba(61, 139, 100, 0.08), rgba(126, 184, 212, 0.05))`,
+              border: '1px solid rgba(61, 139, 100, 0.15)'
+            }}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-gray-400">Collection Value</p>
-                  <p className="text-2xl font-bold text-emerald-400">${totalValue.toFixed(2)}</p>
+                  <p className="text-xs text-slate-400">Collection Value</p>
+                  <p className="text-2xl font-bold" style={{ color: GREEN }}>${totalValue.toFixed(2)}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-gray-400">Total Parts</p>
-                  <p className="text-2xl font-bold text-white">{totalParts}</p>
+                  <p className="text-xs text-slate-400">Total Parts</p>
+                  <p className="text-2xl font-bold text-slate-100">{totalParts}</p>
                 </div>
               </div>
             </div>
 
             {/* Rarity breakdown */}
             <div>
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Rarity Breakdown</h3>
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Rarity Breakdown</h3>
               <div className="space-y-2">
                 {Object.entries(rarityCounts).map(([rarity, count]) => (
                   <div key={rarity} className="flex items-center gap-3">
                     <span className={`text-xs w-16 capitalize ${getRarityColor(rarity)}`}>{rarity}</span>
-                    <div className="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+                    <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: '#1e2228' }}>
                       <div
-                        className={`h-full rounded-full ${
-                          rarity === 'common' ? 'bg-gray-400' :
-                          rarity === 'uncommon' ? 'bg-green-400' :
-                          rarity === 'rare' ? 'bg-blue-400' :
-                          rarity === 'epic' ? 'bg-purple-400' : 'bg-yellow-400'
-                        }`}
-                        style={{ width: `${totalParts > 0 ? (count / totalParts) * 100 : 0}%` }}
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${totalParts > 0 ? (count / totalParts) * 100 : 0}%`,
+                          background: rarity === 'common' ? '#64748b' :
+                            rarity === 'uncommon' ? '#4ade80' :
+                            rarity === 'rare' ? BLUE :
+                            rarity === 'epic' ? '#a78bfa' : '#eab308'
+                        }}
                       ></div>
                     </div>
-                    <span className="text-xs text-gray-400 w-6 text-right">{count}</span>
+                    <span className="text-xs text-slate-400 w-6 text-right">{count}</span>
                   </div>
                 ))}
               </div>
@@ -204,10 +233,14 @@ export default function Profile({ inventory, xp, level, scansCompleted, projects
 
             {/* Category breakdown */}
             <div>
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Categories Discovered</h3>
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Categories Discovered</h3>
               <div className="flex flex-wrap gap-2">
                 {Array.from(new Set(inventory.map(id => getComponentById(id)?.category).filter(Boolean))).map(cat => (
-                  <span key={cat} className="text-xs bg-gray-800/50 text-gray-300 px-2 py-1 rounded-full border border-gray-700/30">
+                  <span key={cat} className="text-xs px-2 py-1 rounded-full" style={{
+                    background: 'rgba(30, 34, 40, 0.5)',
+                    color: '#94a3b8',
+                    border: '1px solid rgba(100, 116, 139, 0.15)'
+                  }}>
                     {cat}
                   </span>
                 ))}
@@ -218,22 +251,26 @@ export default function Profile({ inventory, xp, level, scansCompleted, projects
 
         {activeSection === 'badges' && (
           <div className="space-y-3">
-            <p className="text-xs text-gray-400">Earn badges by scanning, building, and trading!</p>
+            <p className="text-xs text-slate-400">Earn badges by scanning, building, and trading!</p>
             <div className="grid grid-cols-2 gap-3">
               {badges.map(badge => (
                 <div
                   key={badge.id}
-                  className={`p-3 rounded-xl border text-center transition-all ${
-                    badge.earned
-                      ? 'bg-indigo-500/10 border-indigo-500/30'
-                      : 'bg-gray-800/20 border-gray-700/20 opacity-50'
-                  }`}
+                  className="p-3 rounded-xl border text-center transition-all"
+                  style={badge.earned ? {
+                    background: 'rgba(61, 139, 100, 0.08)',
+                    border: '1px solid rgba(61, 139, 100, 0.25)'
+                  } : {
+                    background: 'rgba(30, 34, 40, 0.2)',
+                    border: '1px solid rgba(100, 116, 139, 0.1)',
+                    opacity: 0.5
+                  }}
                 >
                   <span className="text-2xl">{badge.icon}</span>
-                  <p className="text-xs font-bold text-white mt-1">{badge.name}</p>
-                  <p className="text-[10px] text-gray-400 mt-0.5">{badge.description}</p>
+                  <p className="text-xs font-bold text-slate-100 mt-1">{badge.name}</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">{badge.description}</p>
                   {badge.earned && (
-                    <span className="text-[10px] text-indigo-400 mt-1 inline-block">✓ Earned</span>
+                    <span className="text-[10px] mt-1 inline-block" style={{ color: '#4ade80' }}>✓ Earned</span>
                   )}
                 </div>
               ))}
@@ -244,69 +281,69 @@ export default function Profile({ inventory, xp, level, scansCompleted, projects
         {activeSection === 'settings' && (
           <div className="space-y-4">
             <div className="space-y-3">
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Privacy</h3>
-              <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-xl border border-gray-700/20">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Privacy</h3>
+              <div className="flex items-center justify-between p-3 rounded-xl" style={{ background: 'rgba(30, 34, 40, 0.3)', border: '1px solid rgba(100, 116, 139, 0.12)' }}>
                 <div>
-                  <p className="text-sm text-white">Show Profile on Map</p>
-                  <p className="text-[10px] text-gray-500">Let nearby users see your location</p>
+                  <p className="text-sm text-slate-100">Show Profile on Map</p>
+                  <p className="text-[10px] text-slate-500">Let nearby users see your location</p>
                 </div>
-                <button className={`w-10 h-6 rounded-full transition-all ${profileVisible ? 'bg-indigo-500' : 'bg-gray-700'}`}>
-                  <div className={`w-4 h-4 bg-white rounded-full transition-all mx-1 ${profileVisible ? 'translate-x-4' : ''}`}></div>
+                <button className="w-10 h-6 rounded-full transition-all" style={{ background: profileVisible ? GREEN : '#334155' }}>
+                  <div className="w-4 h-4 bg-white rounded-full transition-all mx-1" style={{ transform: profileVisible ? 'translateX(16px)' : 'translateX(0)' }}></div>
                 </button>
               </div>
-              <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-xl border border-gray-700/20">
+              <div className="flex items-center justify-between p-3 rounded-xl" style={{ background: 'rgba(30, 34, 40, 0.3)', border: '1px solid rgba(100, 116, 139, 0.12)' }}>
                 <div>
-                  <p className="text-sm text-white">Open to Trades</p>
-                  <p className="text-[10px] text-gray-500">Allow others to propose trades</p>
+                  <p className="text-sm text-slate-100">Open to Trades</p>
+                  <p className="text-[10px] text-slate-500">Allow others to propose trades</p>
                 </div>
-                <button className="w-10 h-6 rounded-full bg-indigo-500 transition-all">
-                  <div className="w-4 h-4 bg-white rounded-full transition-all mx-1 translate-x-4"></div>
+                <button className="w-10 h-6 rounded-full transition-all" style={{ background: GREEN }}>
+                  <div className="w-4 h-4 bg-white rounded-full transition-all mx-1" style={{ transform: 'translateX(16px)' }}></div>
                 </button>
               </div>
-              <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-xl border border-gray-700/20">
+              <div className="flex items-center justify-between p-3 rounded-xl" style={{ background: 'rgba(30, 34, 40, 0.3)', border: '1px solid rgba(100, 116, 139, 0.12)' }}>
                 <div>
-                  <p className="text-sm text-white">Share Parts List</p>
-                  <p className="text-[10px] text-gray-500">Show your inventory to community</p>
+                  <p className="text-sm text-slate-100">Share Parts List</p>
+                  <p className="text-[10px] text-slate-500">Show your inventory to community</p>
                 </div>
-                <button className={`w-10 h-6 rounded-full transition-all ${profileVisible ? 'bg-indigo-500' : 'bg-gray-700'}`}>
-                  <div className={`w-4 h-4 bg-white rounded-full transition-all mx-1 ${profileVisible ? 'translate-x-4' : ''}`}></div>
+                <button className="w-10 h-6 rounded-full transition-all" style={{ background: profileVisible ? GREEN : '#334155' }}>
+                  <div className="w-4 h-4 bg-white rounded-full transition-all mx-1" style={{ transform: profileVisible ? 'translateX(16px)' : 'translateX(0)' }}></div>
                 </button>
               </div>
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Notifications</h3>
-              <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-xl border border-gray-700/20">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Notifications</h3>
+              <div className="flex items-center justify-between p-3 rounded-xl" style={{ background: 'rgba(30, 34, 40, 0.3)', border: '1px solid rgba(100, 116, 139, 0.12)' }}>
                 <div>
-                  <p className="text-sm text-white">Trade Requests</p>
-                  <p className="text-[10px] text-gray-500">Get notified about trade offers</p>
+                  <p className="text-sm text-slate-100">Trade Requests</p>
+                  <p className="text-[10px] text-slate-500">Get notified about trade offers</p>
                 </div>
-                <button className="w-10 h-6 rounded-full bg-indigo-500 transition-all">
-                  <div className="w-4 h-4 bg-white rounded-full transition-all mx-1 translate-x-4"></div>
+                <button className="w-10 h-6 rounded-full transition-all" style={{ background: GREEN }}>
+                  <div className="w-4 h-4 bg-white rounded-full transition-all mx-1" style={{ transform: 'translateX(16px)' }}></div>
                 </button>
               </div>
-              <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-xl border border-gray-700/20">
+              <div className="flex items-center justify-between p-3 rounded-xl" style={{ background: 'rgba(30, 34, 40, 0.3)', border: '1px solid rgba(100, 116, 139, 0.12)' }}>
                 <div>
-                  <p className="text-sm text-white">Nearby Scans</p>
-                  <p className="text-[10px] text-gray-500">Alert when rare parts scanned nearby</p>
+                  <p className="text-sm text-slate-100">Nearby Scans</p>
+                  <p className="text-[10px] text-slate-500">Alert when rare parts scanned nearby</p>
                 </div>
-                <button className="w-10 h-6 rounded-full bg-gray-700 transition-all">
+                <button className="w-10 h-6 rounded-full transition-all" style={{ background: '#334155' }}>
                   <div className="w-4 h-4 bg-white rounded-full transition-all mx-1"></div>
                 </button>
               </div>
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Account</h3>
-              <div className="p-3 bg-gray-800/30 rounded-xl border border-gray-700/20">
-                <div className="flex items-center gap-2 text-sm text-gray-400">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Account</h3>
+              <div className="p-3 rounded-xl" style={{ background: 'rgba(30, 34, 40, 0.3)', border: '1px solid rgba(100, 116, 139, 0.12)' }}>
+                <div className="flex items-center gap-2 text-sm text-slate-400">
                   <MapPin className="w-4 h-4" />
                   <span>Location: New York, NY</span>
                 </div>
               </div>
-              <div className="p-3 bg-gray-800/30 rounded-xl border border-gray-700/20">
-                <p className="text-xs text-gray-500">Member since: January 2024</p>
-                <p className="text-xs text-gray-500 mt-1">App Version: 1.0.0</p>
+              <div className="p-3 rounded-xl" style={{ background: 'rgba(30, 34, 40, 0.3)', border: '1px solid rgba(100, 116, 139, 0.12)' }}>
+                <p className="text-xs text-slate-500">Member since: January 2024</p>
+                <p className="text-xs text-slate-500 mt-1">App Version: 1.0.0</p>
               </div>
             </div>
           </div>

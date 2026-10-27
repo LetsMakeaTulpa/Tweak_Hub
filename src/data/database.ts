@@ -488,22 +488,22 @@ export function getBuildableProjects(userParts: string[]): { project: Project; m
 
 export function getRarityColor(rarity: string): string {
   switch (rarity) {
-    case 'common': return 'text-gray-400';
-    case 'uncommon': return 'text-green-400';
-    case 'rare': return 'text-blue-400';
-    case 'epic': return 'text-purple-400';
-    case 'legendary': return 'text-yellow-400';
-    default: return 'text-gray-400';
+    case 'common': return 'text-slate-400';
+    case 'uncommon': return 'text-emerald-400';
+    case 'rare': return 'text-sky-400';
+    case 'epic': return 'text-violet-400';
+    case 'legendary': return 'text-amber-400';
+    default: return 'text-slate-400';
   }
 }
 
 export function getRarityBg(rarity: string): string {
   switch (rarity) {
-    case 'common': return 'bg-gray-500/20 border-gray-500/30';
-    case 'uncommon': return 'bg-green-500/20 border-green-500/30';
-    case 'rare': return 'bg-blue-500/20 border-blue-500/30';
-    case 'epic': return 'bg-purple-500/20 border-purple-500/30';
-    case 'legendary': return 'bg-yellow-500/20 border-yellow-500/30';
-    default: return 'bg-gray-500/20 border-gray-500/30';
+    case 'common': return 'bg-slate-500/10 border-slate-500/20';
+    case 'uncommon': return 'bg-emerald-500/10 border-emerald-500/20';
+    case 'rare': return 'bg-sky-500/10 border-sky-500/20';
+    case 'epic': return 'bg-violet-500/10 border-violet-500/20';
+    case 'legendary': return 'bg-amber-500/10 border-amber-500/20';
+    default: return 'bg-slate-500/10 border-slate-500/20';
   }
 }

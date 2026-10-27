@@ -11,8 +11,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+  0%, 100% { box-shadow: 0 0 5px rgba(61, 139, 100, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(61, 139, 100, 0.6); }
 }
 
 @keyframes scan-line {
@@ -25,22 +25,27 @@
   50% { transform: translateY(-5px); }
 }
 
+@keyframes rust-flicker {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(30, 33, 38, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(75, 85, 99, 0.5);
+  background: rgba(100, 116, 139, 0.5);
   border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(75, 85, 99, 0.8);
+  background: rgba(100, 116, 139, 0.8);
 }
 
 /* Smooth transitions */
@@ -54,9 +59,75 @@ html, body, #root {
 }
 
 body {
-  background: #030712;
-  color: white;
+  background: #12141a;
+  color: #e2e8f0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Brushed steel background */
+.brushed-steel {
+  background:
+    linear-gradient(180deg,
+      rgba(55, 65, 81, 0.03) 0%,
+      rgba(75, 85, 99, 0.05) 25%,
+      rgba(55, 65, 81, 0.03) 50%,
+      rgba(75, 85, 99, 0.05) 75%,
+      rgba(55, 65, 81, 0.03) 100%
+    ),
+    linear-gradient(90deg,
+      rgba(100, 116, 139, 0.02) 0%,
+      transparent 2%,
+      transparent 98%,
+      rgba(100, 116, 139, 0.02) 100%
+    ),
+    #1a1d23;
+}
+
+/* Brushed steel panel */
+.steel-panel {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      rgba(148, 163, 184, 0.015) 1px,
+      rgba(148, 163, 184, 0.015) 2px
+    ),
+    linear-gradient(180deg,
+      #1e2228 0%,
+      #1a1d23 50%,
+      #1e2228 100%
+    );
+  border: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+/* Rust texture accent */
+.rust-accent {
+  background: linear-gradient(135deg,
+    rgba(180, 90, 44, 0.15) 0%,
+    rgba(196, 99, 46, 0.08) 50%,
+    rgba(180, 90, 44, 0.15) 100%
+  );
+  border: 1px solid rgba(180, 90, 44, 0.2);
+}
+
+/* Rivet/bolt decorative element */
+.rivet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #64748b, #334155);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Industrial green glow */
+.green-glow {
+  box-shadow: 0 0 10px rgba(61, 139, 100, 0.2), inset 0 0 10px rgba(61, 139, 100, 0.05);
+}
+
+/* Powder blue glow */
+.blue-glow {
+  box-shadow: 0 0 10px rgba(126, 184, 212, 0.2), inset 0 0 10px rgba(126, 184, 212, 0.05);
 }
 
 /* Animation classes */
@@ -76,11 +147,15 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
-/* Glass morphism effect */
-.glass {
-  background: rgba(17, 24, 39, 0.7);
+.animate-rust {
+  animation: rust-flicker 3s ease-in-out infinite;
+}
+
+/* Glass morphism with steel tint */
+.glass-steel {
+  background: rgba(26, 29, 35, 0.8);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(75, 85, 99, 0.2);
+  border: 1px solid rgba(100, 116, 139, 0.15);
 }
 
 /* Safe area padding for mobile */
@@ -88,4 +163,14 @@ body {
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
+}
+
+/* Metal edge highlight */
+.metal-edge {
+  border-image: linear-gradient(
+    180deg,
+    rgba(148, 163, 184, 0.3) 0%,
+    rgba(100, 116, 139, 0.1) 50%,
+    rgba(148, 163, 184, 0.2) 100%
+  ) 1;
 }
